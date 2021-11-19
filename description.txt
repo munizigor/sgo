@@ -1,0 +1,9 @@
+Extensão Interna do Central de Operações e Comunicações do CBMDF para interagir exclusivamente com o Sistema SGO/SSP. Na primeira versão, ela destaca as ocorrências ainda não despachadas para unidades operacionais.
+
+About this extension
+Essa extensão busca melhorar a interação do operador do sistema SGO, a fim de agilizar e aperfeiçoar o atendimento das ocorrências recebidas pelo número 193
+----------
+v. 0.0.1
+- Destaque de ocorrências não despachadas para unidades operacionais
+Developer comments
+Sugestões e erros observados serão sempre muito bem vindos. Sinta-se a vontade de comunicar qualquer observação para igor.silva@cbm.df.gov.br
