@@ -130,7 +130,8 @@ $.ajax({
 
             linha = document.getElementById("idUn-"+vtr_cod_unidade)
             coluna = document.getElementById("cabecalho").cells.namedItem(vtr_servico)
-            coluna = ((coluna)? coluna:document.getElementById("cabecalho").cells.namedItem('NI'))
+            linha = ((linha)? linha:document.getElementById("idUn-531"))//Provisorio
+            coluna = ((coluna)? coluna:document.getElementById("cabecalho").cells.namedItem('NI'))//Provisorio
             if (!linha || !coluna){
                 return true;
             }
