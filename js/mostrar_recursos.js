@@ -5,20 +5,24 @@
 // Para encontrar descrição das unidades: https://sgo.ssp.df.gov.br/Recursos/ajaxGetUnidadePorAgencia/2
 
 // Adicionar botao Regul Méd
+function inclBtn(){
     botaoCores = document.getElementById("botaoCores").getElementsByTagName("ul")[0];
     botaoCores.insertAdjacentHTML("beforeend", `
     <li class="open">
         <span  id="btn_regul_med" class="btn btn-danger" title="Regulação Médica">Regulação Médica</span>
     </li>
 `)
+}
+
 
 function loadRegulMed() {
+
     //Definicao de Variaveis
     
     var cod_agencia = "2";
-    var cod_unidade = "0";
-    var cod_unidade_mesa_atuacao = "0";
-    var cod_tipo_recurso = "0";
+    var cod_unidade = "";
+    var cod_unidade_mesa_atuacao = "";
+    var cod_tipo_recurso = "";
     var nm_recurso = "";
     var qtd_registro_pagina = "80000";
     var cod_disponibilidade_recurso = "0";
@@ -31,10 +35,6 @@ function loadRegulMed() {
         dataType: "json",
         data: {
             cod_agencia: cod_agencia,
-            cod_unidade: cod_unidade,
-            cod_unidade_mesa_atuacao: cod_unidade_mesa_atuacao,
-            cod_tipo_recurso: cod_tipo_recurso,
-            nm_recurso: nm_recurso,
             qtd_registro_pagina: qtd_registro_pagina,
             cod_disponibilidade: cod_disponibilidade_recurso,
             pagina: pagina
@@ -72,6 +72,7 @@ function loadRegulMed() {
                 acao = "";
                 let urlEditar = "";
 
+                //TODO: CHECAR HABILITAÇÃO DO MILITAR
                 if ('True' == 'True' || 'False' == 'True' || 'False' == 'True' || 
                     'False' == 'True'|| 'False' == 'True')
                 {
@@ -151,11 +152,14 @@ function loadRegulMed() {
             $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(total_registro / qtd_registro_pagina));
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest);
             console.log(textStatus);
+            console.log(errorThrown);
         }
     });
  }
 
+inclBtn();
 document.getElementById("btn_regul_med").addEventListener ("click", loadRegulMed, false);
 
 

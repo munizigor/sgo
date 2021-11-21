@@ -18,8 +18,8 @@
     },
 
     {
-      "matches": ["*://fenix.ssp.df.gov.br/recursos/listatelaajax","*://sgo.ssp.df.gov.br/recursos/listatelaajax"],
-      "js":["js/jquery-3.6.0.min.js","js/mostrar_recursos.js"]
+      "matches": ["*://fenix.ssp.df.gov.br/recursos/listatelaajax*","*://sgo.ssp.df.gov.br/recursos/listatelaajax*"],
+      "js":["js/jquery-2.1.1.min.js","js/mostrar_recursos.js","js/mostrar_matriz.js"]
 
     },
     {
