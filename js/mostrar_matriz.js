@@ -13,9 +13,10 @@ function inclBtnMatriz(){
 `)
 }
 
+inclBtnMatriz();
 
-function loadMatriz() {
-
+$("#btn_matriz").click( function (e) {
+    e.preventDefault();
     //Definicao de Variaveis
     
     var cod_agencia = "2";
@@ -27,6 +28,8 @@ function loadMatriz() {
     var cod_disponibilidade_recurso = "0";
     var pagina = "0";
 
+    var dict_servico=[];
+
     //Gerar colunas por Serviço
     $.ajax({
         type: "POST",
@@ -36,10 +39,20 @@ function loadMatriz() {
         $("#resultado table").remove();
         $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
         $("#resultado table").append('<thead><tr id="cabecalho"><th>MESA</th><th>UNIDADE</th><th>SIGLA</th><th>REGIÃO DE ATENDIMENTO</th></tr></thead>');
+
         $.each(data, function (key, value) {
-            $("#resultado table tr").append('<th name='+value.NM_SIGLA+'>'+value.NM_SERVICO+'</th>')
+            serv_sigla = value.NM_SIGLA
+            serv_nome = value.NM_SERVICO
+
+            dict_servico[serv_nome] = serv_sigla
+            $("#resultado table tr").append('<th name='+serv_sigla+'>'+serv_nome+'</th>')
         })
         $("#resultado table").append('<tbody></tbody>');
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest);
+        console.log(textStatus);
+        console.log(errorThrown);
     }
     }).then(function () {
 
@@ -106,6 +119,11 @@ function loadMatriz() {
             + '</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
         });
 
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest);
+        console.log(textStatus);
+        console.log(errorThrown);
     }
     });
     }).then(function () {
@@ -125,8 +143,9 @@ $.ajax({
         total_registro = data.quantidade_registro_retornado.QTD_REGISTRO_RETORNADO;
         $.each(data.recursos, function (key, value) {
             
+
             vtr_cod_unidade = value.COD_UNIDADE
-            vtr_servico = value.NM_SERVICO
+            vtr_servico = dict_servico[value.NM_SERVICO]
 
             linha = document.getElementById("idUn-"+vtr_cod_unidade)
             coluna = document.getElementById("cabecalho").cells.namedItem(vtr_servico)
@@ -170,8 +189,9 @@ $.ajax({
 
             idx = coluna.cellIndex
             linha.cells[idx].insertAdjacentHTML("beforeend", 
-                    '<span class="btnVtrs btn '+disponibilidade_class+' txt-color-white" title="'+value.LABEL_DISPONIBILIDADE+'"'
-                    +'onclick="">'+value.NM_RECURSO+'</span>')
+                    '<a href="/recursos/editar?cod_recurso='+value.COD_RECURSO+'&amp;cod_agencia=2" target="_blank">'
+                    +'<span class="btnVtrs btn '+disponibilidade_class+' txt-color-white" title="'+value.LABEL_DISPONIBILIDADE+'"'
+                    +'onclick="">'+value.NM_RECURSO+'</span></a>')
     
         }); 
 
@@ -181,9 +201,10 @@ $.ajax({
  });
  });
 }
+)
 
-inclBtnMatriz();
-document.getElementById("btn_matriz").addEventListener ("click", loadMatriz, false)
+// inclBtnMatriz();
+// document.getElementById("btn_matriz").addEventListener ("click", loadMatriz, false)
 //JSON de viaturas
 
   // COD_AGENCIA: 2
