@@ -83,33 +83,22 @@ function loadRegulMed(e) {
                 if (value.COD_DISPONIBILIDADE_RECURSO == 1) {
 
                     disponibilidade_class = "status-ativo";
-                    //corLinha = "#16a085";
-                    /////se estiver ativa, desativá-la....
-                    //cod_disponibilidade = 3;
-                    // textoBotao = "Desativar";
+
                 }
                 else if (value.COD_DISPONIBILIDADE_RECURSO == 2) {
                     disponibilidade_class = "status-alocado";
-                    //corLinha = "#e67e22";
+
                 }
                 else if (value.COD_DISPONIBILIDADE_RECURSO == 3) {
                     disponibilidade_class = "status-desativado";
-                    ////////////estando desativada; ativá-la
-                    //cod_disponibilidade = 1;
-                    //textoBotao = "Ativar";
-                    // corLinha = "#FF7F50";
+
                 }
                 else if (value.COD_DISPONIBILIDADE_RECURSO == 7) {
                     disponibilidade_class = "status-em-delegacia-hospital";
-                    ////////////estando desativada; ativá-la
-                    //cod_disponibilidade = "";
-                    //textoBotao = "Ativar";
-                    //corLinha = "#338DCD";
                 }
                 else {
                     disponibilidade_class = "status-em-outra-situacao";
-                    //cod_disponibilidade = "";
-                    //corLinha = "#666";
+
                 }
 
                 id_Tr = ("idTr-"+cod_recurso);
@@ -129,7 +118,7 @@ function loadRegulMed(e) {
                     + '</td><td><b>' + value.DSC_MESA_ATUACAO + ' - ' + value.LABEL_AREA_ATUACAO + '</b></td><td><b>' + value.NR_MATR_CMT_RECURSO_ATUAL_INTERNO
                     + ' - ' + value.NM_CMT_RECURSO_ATUAL_INTERNO + '<br>' + value.NR_TEL_CMT_RECURSO_ATUAL_INTERNO + '<b></td></tr>');
             }
-            ).then(vtrSamu());
+            ).then(setInterval(vtrSamu, 1000));
 
             // $("#resultado").append('</table>');
             $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(total_registro / qtd_registro_pagina));
@@ -155,11 +144,11 @@ function loadRegulMed(e) {
                 // console.log(value.BGCL)
                 if (value.BGCL == "000000") { //pRETO - Indisponivel
                     disponibilidade_class = "status-desativado";
-                    samu_disponibilidade = "PRETO - INDISPONÍVEL";
+                    samu_disponibilidade = "RF AUTORIZADO";
                 }
                 else if (value.BGCL == "808080") { //CINZA - 
                     disponibilidade_class = "status-desativado";
-                    samu_disponibilidade = "CINZA - INDISPONÍVEL";
+                    samu_disponibilidade = "INDISPONÍVEL";
                 }
 
                 else if (value.BGCL == "008000") { //VERDE - Disponivel
@@ -174,12 +163,32 @@ function loadRegulMed(e) {
 
                 else if (value.BGCL == "5555ff") { //Azul CLaro - em deslocamento
                     disponibilidade_class = "status-alocado";
-                    samu_disponibilidade = "ALOCADA - EM DESLOCAMENTO";
+                    samu_disponibilidade = "ALOCADA - EQUIPE COMUNICADA";
                 }
 
                 else if (value.BGCL == "000000") { //Vermelho - Aguardando Deslocamento
                     disponibilidade_class = "status-alocado";
                     samu_disponibilidade = "ALOCADA - AGUARDANDO DESLOCAMENTO";
+                }
+
+                else if (value.BGCL == "b02b2c") { //Vermelho Pardo - EM Apoio - Deslocado
+                    disponibilidade_class = "status-alocado";
+                    samu_disponibilidade = "EM APOIO - DESLOCADO";
+                }
+
+                else if (value.BGCL == "ff007f") { //rOSA - Desloc Higienização COVID
+                    disponibilidade_class = "status-alocado";
+                    samu_disponibilidade = "DESLOC. HIGIENIZAÇÃO COVID";
+                }
+
+                else if (value.BGCL == "ff0000") { //rOSA - Desloc Higienização COVID
+                    disponibilidade_class = "status-alocado";
+                    samu_disponibilidade = "HIGIENIZAÇÃO COVID";
+                }
+                
+                else if (value.BGCL == "ffaa00") { //rOSA - Desloc Higienização COVID
+                    disponibilidade_class = "status-alocado";
+                    samu_disponibilidade = "RESERVADA";
                 }
 
                 else  {
@@ -189,11 +198,13 @@ function loadRegulMed(e) {
 
                 id_Tr = ("idTr-"+value.TID);
                 id_Td = ('idTd-'+value.TID);
-
+                if($('#'+id_Tr).length){
+                    $('#'+id_Tr).remove();
+                }
                 $("#resultado table tbody").append('<tr id=\'' + id_Tr + '\'class = \'' + disponibilidade_class + '\'><td><ul><li><b>SAMU '
                     + value.TXT + '</b><br></li></td><td id=\'' + id_Td + '\'>'
-                    + samu_disponibilidade + '</td><td class="tempo_status" name="24/11/2021 08:50:19"></td><td>SAMU</td><td><b>TODO O DF</b></td><td><b>' 
-                    + ' - <b></td></tr>');            
+                    + samu_disponibilidade + '</td><td class="tempo_status">'+value.LAT+', '+value.LON
+                    +'</td><td>SAMU</td><td><b>TODO O DF</b></td><td><b> - <b></td></tr>');            
 
             })
         }
