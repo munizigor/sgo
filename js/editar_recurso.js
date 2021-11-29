@@ -18,7 +18,7 @@ console.log(obs.value)
 function lerParams(){
     $('#FLG_REGUL_MED').change(function(){
         
-        var val_regul_med = this.checked ? '|REGULAÇÃO MÉDICA|' : '';
+        var val_regul_med = this.checked ? '|REGULAÇÃO MÉDICA' : '';
         $('#DSC_OBSERVACAO').val(val_regul_med);
     });
 }

@@ -118,7 +118,7 @@ function loadRegulMed(e) {
                     + '</td><td><b>' + value.DSC_MESA_ATUACAO + ' - ' + value.LABEL_AREA_ATUACAO + '</b></td><td><b>' + value.NR_MATR_CMT_RECURSO_ATUAL_INTERNO
                     + ' - ' + value.NM_CMT_RECURSO_ATUAL_INTERNO + '<br>' + value.NR_TEL_CMT_RECURSO_ATUAL_INTERNO + '<b></td></tr>');
             }
-            ).then(setInterval(vtrSamu, 1000));
+            )//.then(setInterval(vtrSamu, 1000));
 
             // $("#resultado").append('</table>');
             $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(total_registro / qtd_registro_pagina));
@@ -134,7 +134,7 @@ function loadRegulMed(e) {
  function vtrSamu(){
     $.ajax({
         type: "GET",
-        url: "https://samudf.com.br/maps/radio_operacao/map_points/dynamic.php",
+        url: "http://samudf.com.br/maps/radio_operacao/map_points/dynamic.php",
         dataType: "json",
         data: {
             servidor_id: "0"
