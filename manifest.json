@@ -28,7 +28,7 @@
     },
     {
       "matches": ["*://*.br/atendimento/emandamento*"],
-      "js":["js/alerta_externo.js"]
+      "js":["js/jquery-2.1.1.min.js","js/alerta_externo.js"]
 
     }
   ],

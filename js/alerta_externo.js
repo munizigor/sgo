@@ -14,18 +14,46 @@ function alertar_compartilhamento () {
 
     //iterando pelas linhas da tabela
     tabela = document.getElementById("dt_basic").getElementsByTagName("tbody")[0];
-    for (var i = 0, row; row = tabela.rows[i]; i++) {
-        recurso = row.getElementsByTagName("td");
+    tab_len = tabela.rows.length-1
+	for (var i = tab_len; row = tabela.rows[i]; i--) {
+		recurso = row.getElementsByTagName("td");
         link = recurso[0].getElementsByTagName("a")[0]
         link_txt = link.innerText
-        if (link_txt.substring(8,11)!="002" && recurso[5].innerText=='') {
-            compartilhar_botao = row.querySelector('[title="Compartilhar"]');
-            compartilhar_botao.style.animation="blinkingBackground 2s infinite"
-            recurso[5].innerHTML="<h3><strong>QTO EXTERNA<br><br>VERIFICAR SE HOUVE DESPACHO</strong></h3>"
-            row.style.backgroundColor="indianred";
-            tabela.insertAdjacentElement('afterbegin',row)
-            //row.style.animation="blinkingBackground 2s infinite"
-            //recurso[5].innerText="DESPACHAR IMEDIATAMENTE";
+        if (link_txt.substring(8,11)!="002") {
+            ocorrencia_url = location.origin+"/atendimento/imprimirdetalhamentocompleto?cod_teleatendimento="+recurso[0].id.toString()
+            console.log(ocorrencia_url)
+            $.ajax({
+                type: "GET",
+                url: ocorrencia_url,
+                dataType: "html",
+            success: function (data) {
+                var el = document.createElement('html');
+                el.innerHTML = data
+                divs = el.getElementsByClassName("panel-title")
+                for (i=0;atendimentos = divs[i];i++) {
+                    console.log(atendimentos.innerText+" ----- "+recurso[0].id)
+                    if (atendimentos.innerText.includes("CBMDF")) {
+                        // console.log("Ocorrencia "+recurso[0].id+" atendida pelo CBMDF")
+                    }
+                    else {
+                        // console.log("Ocorrencia "+recurso[0].id+" não atendida pelo CBMDF")
+                        // recurso[5].innerHTML="<h3><strong>QTO EXTERNA<br><br>VERIFICAR SE HOUVE DESPACHO</strong></h3>"
+                        // row.style.backgroundColor="indianred";
+                        // tabela.insertAdjacentElement('afterbegin',row)
+                    }
+
+                }
+                
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+            })
+
+
         }
       }
 }
