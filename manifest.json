@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "SGO-CBMDF",
-  "version": "0.1",
+  "version": "0.2",
 
   "short_name": "SGO-CBMDF",
   "description": "Extensão Interna da Central de Operações e Comunicações do CBMDF para interagir com o Sistema SGO",
@@ -9,7 +9,7 @@
   "icons": {
     "48": "img/cbm.jpg"
   },
-  "permissions": ["storage", "activeTab","<all_urls>"],
+  "permissions": ["storage", "activeTab"],
   "content_scripts": [
     {
       "matches": ["*://fenix.ssp.df.gov.br/*","*://sgo.ssp.df.gov.br/*"],
@@ -21,11 +21,14 @@
       "matches": ["*://fenix.ssp.df.gov.br/recursos/listatelaajax*","*://sgo.ssp.df.gov.br/recursos/listatelaajax*"],
       "js":["js/jquery-2.1.1.min.js","js/mostrar_recursos.js","js/mostrar_matriz.js"]
 
-    },    {
+    },    
+    
+    {
       "matches": ["*://*.br/recursos/editar?cod_recurso=*"],
       "js":["js/jquery-2.1.1.min.js","js/editar_recurso.js"]
 
     },
+    
     {
       "matches": ["*://*.br/atendimento/emandamento*"],
       "js":["js/jquery-2.1.1.min.js","js/alerta_externo.js"]
