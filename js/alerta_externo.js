@@ -15,17 +15,19 @@ function alertar_compartilhamento () {
                 divs = el.getElementsByClassName("panel-title")
                 divs_list = ""
                 for (j=0;atendimentos = divs[j];j++) {
-                    divs_list+= atendimentos.innerText
+                    if (atendimentos.innerText.match(/MESA.*CBMDF/) && atendimentos.nextSibling.data.trim()!="Tipo Desfecho:") {
+                        divs_list+="CBMDF"//pass
                     }
-                // TODO: Algumas excepcionalidades não estão sendo lidas
-                // - https://sgo.ssp.df.gov.br/atendimento/imprimirdetalhamentocompleto?cod_teleatendimento=11211282 - Direcionado para SAMU - SOCORRIDO POR SAMU
-                // - https://sgo.ssp.df.gov.br/atendimento/imprimirdetalhamentocompleto?cod_teleatendimento=11211984 - QTO DUplicada OCORRENCIA DUPLICADA ( CANCELADA ) 
+                    else{
+                        divs_list+= atendimentos.innerText
+                    }
+                }
                 divs_list_sem_cocb = divs_list.replace(/MESA.*CBMDF/g,"")
-                console.log("\n\n\n\n"+divs_list_sem_cocb+"\n\n\n\n")
+                // console.log("\n\n"+cod_recurso+" - \n\n"+divs_list_sem_cocb+"\n\n\n\n")
                 return divs_list_sem_cocb
             }).then(function(){
                 if (!divs_list_sem_cocb.includes("CBMDF")) {
-                        recurso[5].innerHTML="<h3><strong>QTO SEM DESPACHO<br><br>DESPACHAR IMEDIATAMENTE</strong></h3>"
+                        recurso[5].innerHTML="<h3>QTO EXTERNA SEM DESPACHO<br><br><strong>DESPACHAR IMEDIATAMENTE</strong></h3>"
                         recurso[0].parentNode.style.backgroundColor="indianred";
                         tabela.insertAdjacentElement('afterbegin',recurso[0].parentNode)
                 }

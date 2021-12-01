@@ -39,7 +39,7 @@ function loadRegulMed(e) {
 
       $.ajax({
         type: "POST",
-        url: "/Recursos/ajaxGetBuscaRecursos/",
+        url: location.origin+"/Recursos/ajaxGetBuscaRecursos/",
         dataType: "json",
         data: {
             cod_agencia: cod_agencia,

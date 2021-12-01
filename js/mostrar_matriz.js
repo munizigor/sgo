@@ -33,7 +33,7 @@ $("#btn_matriz").click( function (e) {
     //Gerar colunas por Serviço
     $.ajax({
         type: "POST",
-        url: "/Recursos/ajaxGetServicoPorAgencia/2",
+        url: location.origin+"/Recursos/ajaxGetServicoPorAgencia/2",
         dataType: "json",
     success: function (data) {
         $("#resultado table").remove();
@@ -59,7 +59,7 @@ $("#btn_matriz").click( function (e) {
     //Gerar linhas por unidade
     $.ajax({
         type: "POST",
-        url: "/Tabelas/ajaxGetBuscaUnidades/",
+        url: location.origin+"/Tabelas/ajaxGetBuscaUnidades/",
         dataType: "json",
         data: {
             cod_agencia: cod_agencia,
@@ -131,7 +131,7 @@ $("#btn_matriz").click( function (e) {
 //AJAX para inserir as viaturas
 $.ajax({
     type: "POST",
-    url: "/Recursos/ajaxGetBuscaRecursos/",
+    url: location.origin+"/Recursos/ajaxGetBuscaRecursos/",
     dataType: "json",
     data: {
         cod_agencia: cod_agencia,
