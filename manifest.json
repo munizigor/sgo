@@ -30,7 +30,7 @@
     },
     
     {
-      "matches": ["*://*.br/atendimento/emandamento*"],
+      "matches": ["*://*.br/atendimento/emandamento*","*://*.br/atendimento/acompanhamento*","*://*.br/teleatendimentocbmdf/emandamento*","*://*.br/teleatendimento/emandamento*"],
       "js":["js/jquery-2.1.1.min.js","js/alerta_externo.js"]
 
     }

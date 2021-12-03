@@ -1,15 +1,16 @@
 function alertar_compartilhamento () {
-
     //iterando pelas linhas da tabela
     tabela = document.getElementById("dt_basic").getElementsByTagName("tbody")[0];
     tab_len = tabela.rows.length-1
 	for (var i = tab_len; row = tabela.rows[i]; i--) {
 		let recurso = row.getElementsByTagName("td");
         let link = recurso[0].getElementsByTagName("a")[0]
-        let link_txt = link.innerText
+        let link_txt = link.innerText.replace(/\D/g,'');
+        console.log(link_txt.substring(8,11))
         if (link_txt.substring(8,11)!="002") {
-            let cod_recurso = recurso[0].id.toString()
-            $.get(location.origin+"/atendimento/imprimirdetalhamentocompleto?cod_teleatendimento="+cod_recurso).then(function(data){
+            let url_teleatendimento = link.href
+            console.log(url_teleatendimento)
+            $.get(url_teleatendimento).then(function(data){
                 var el = document.createElement('html');
                 el.innerHTML = data
                 divs = el.getElementsByClassName("panel-title")
@@ -26,7 +27,7 @@ function alertar_compartilhamento () {
                 // console.log("\n\n"+cod_recurso+" - \n\n"+divs_list_sem_cocb+"\n\n\n\n")
                 return divs_list_sem_cocb
             }).then(function(){
-                if (!divs_list_sem_cocb.includes("CBMDF")) {
+                if (divs_list_sem_cocb.includes("CBMDF")) {
                         recurso[5].innerHTML="<h3>QTO EXTERNA SEM DESPACHO<br><br><strong>DESPACHAR IMEDIATAMENTE</strong></h3>"
                         recurso[0].parentNode.style.backgroundColor="indianred";
                         tabela.insertAdjacentElement('afterbegin',recurso[0].parentNode)
