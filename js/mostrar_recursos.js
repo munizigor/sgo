@@ -10,6 +10,7 @@ function inclBtn(){
     nova_ul = document.createElement("ul");
     botaoCores.children[0].appendChild(nova_ul);
     botaoCores = botaoCores.getElementsByTagName("ul")[0];
+
 //     botaoCores.insertAdjacentHTML("beforeend", `
 //     <li class="open">
 //         <span  id="btn_regul_med" class="btn btn-danger" title="Regulação Médica">Regulação Médica</span>
