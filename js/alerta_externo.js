@@ -6,10 +6,8 @@ function alertar_compartilhamento () {
 		let recurso = row.getElementsByTagName("td");
         let link = recurso[0].getElementsByTagName("a")[0]
         let link_txt = link.innerText.replace(/\D/g,'');
-        console.log(link_txt.substring(8,11))
         if (link_txt.substring(8,11)!="002") {
             let url_teleatendimento = link.href
-            console.log(url_teleatendimento)
             $.get(url_teleatendimento).then(function(data){
                 var el = document.createElement('html');
                 el.innerHTML = data
@@ -27,7 +25,7 @@ function alertar_compartilhamento () {
                 // console.log("\n\n"+cod_recurso+" - \n\n"+divs_list_sem_cocb+"\n\n\n\n")
                 return divs_list_sem_cocb
             }).then(function(){
-                if (divs_list_sem_cocb.includes("CBMDF")) {
+                if (!divs_list_sem_cocb.includes("CBMDF")) {
                         recurso[5].innerHTML="<h3>QTO EXTERNA SEM DESPACHO<br><br><strong>DESPACHAR IMEDIATAMENTE</strong></h3>"
                         recurso[0].parentNode.style.backgroundColor="indianred";
                         tabela.insertAdjacentElement('afterbegin',recurso[0].parentNode)
