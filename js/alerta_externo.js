@@ -27,7 +27,7 @@ function alertar_compartilhamento () {
             }).then(function(){
                 if (!divs_list_sem_cocb.includes("CBMDF")) {
                         recurso[5].innerHTML="<h3>QTO EXTERNA SEM DESPACHO<br><br><strong>DESPACHAR IMEDIATAMENTE</strong></h3>"
-                        recurso[0].parentNode.style.backgroundColor="indianred";
+                        recurso[0].parentNode.style.backgroundColor="indianred"; //TODO: Remover fundo vermelho. Deixar apenas nas ocorrências em atraso
                         tabela.insertAdjacentElement('afterbegin',recurso[0].parentNode)
                 }
             }
