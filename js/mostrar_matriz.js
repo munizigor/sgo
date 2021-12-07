@@ -4,6 +4,7 @@
 // -3. Automatizar auditoria do preenchimento
 // Para encontrar descrição das unidades: https://sgo.ssp.df.gov.br/Recursos/ajaxGetUnidadePorAgencia/2
 // Adicionar botao Regul Méd
+// COnsultar ocorrências: https://sgo.ssp.df.gov.br/Ocorrencia
 function inclBtnMatriz(){
     botaoCores = document.getElementById("botaoCores").getElementsByTagName("ul")[0];
     botaoCores.insertAdjacentHTML("beforeend", `

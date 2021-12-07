@@ -37,6 +37,5 @@ function alertar_compartilhamento () {
         }
       }
 
-//TODO: COlocar alerta sonoro
 alertar_compartilhamento ();
 
