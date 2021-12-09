@@ -5,19 +5,41 @@
 // Para encontrar descrição das unidades: https://sgo.ssp.df.gov.br/Recursos/ajaxGetUnidadePorAgencia/2
 // Adicionar botao Regul Méd
 // COnsultar ocorrências: https://sgo.ssp.df.gov.br/Ocorrencia
-function inclBtnMatriz(){
-    botaoCores = document.getElementById("botaoCores").getElementsByTagName("ul")[0];
-    botaoCores.insertAdjacentHTML("beforeend", `
-    <li class="open">
-        <span  id="btn_matriz" class="btn btn-warning" title="Matriz">Matriz Operacional</span>
-    </li>
-`)
-}
+// function inclBtnMatriz(){
+//     $("#content").remove();
+//     // $("ear-comunicado-geral").remove();
+//     // $("btn-ear-comunicado-geral").remove(); TODO: Retirar abas COmunicados
+//     // $("ear-alerta-ocorrencias").remove();
+//     // $("btn-ear-alerta-ocorrencias").remove();
+//     // $("ear-lista-recursos").remove();
+//     // $("btn-ear-lista-recursos").remove();
+//     // $("#main").append('<div class="row" id="botaoCores"></div>')
+//     $("#main").append('<div class="row" id="resultadoRow"></div>')
+//     $("#resultadoRow").append('<div style="align-content:center" id="resultado" class="col-md-12"></div>')
+// //     $("#botaoCores").append(`
+// //     <ul>
+// //     <li class="open">
+// //         <span  id="btn_matriz" class="btn btn-warning" title="Matriz">Poder Operacional</span>
+// //     </li>
+// //     </ul>
+// // `)
+// }
 
-inclBtnMatriz();
+// inclBtnMatriz();
 
-$("#btn_matriz").click( function (e) {
-    e.preventDefault();
+
+function loadPoder () {
+
+    $("#content").remove();
+    // $("ear-comunicado-geral").remove();
+    // $("btn-ear-comunicado-geral").remove(); TODO: Retirar abas COmunicados
+    // $("ear-alerta-ocorrencias").remove();
+    // $("btn-ear-alerta-ocorrencias").remove();
+    // $("ear-lista-recursos").remove();
+    // $("btn-ear-lista-recursos").remove();
+    // $("#main").append('<div class="row" id="botaoCores"></div>')
+    $("#main").append('<div class="row" id="resultadoRow"></div>')
+    $("#resultadoRow").append('<div style="align-content:center" id="resultado" class="col-md-12"></div>')
     //Definicao de Variaveis
     
     var cod_agencia = "2";
@@ -37,7 +59,6 @@ $("#btn_matriz").click( function (e) {
         url: location.origin+"/Recursos/ajaxGetServicoPorAgencia/2",
         dataType: "json",
     success: function (data) {
-        $("#resultado table").remove();
         $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
         $("#resultado table").append('<thead><tr id="cabecalho"><th>MESA</th><th>UNIDADE</th><th>SIGLA</th><th>REGIÃO DE ATENDIMENTO</th></tr></thead>');
 
@@ -202,8 +223,8 @@ $.ajax({
  });
  });
 }
-)
 
+loadPoder()
 // inclBtnMatriz();
 // document.getElementById("btn_matriz").addEventListener ("click", loadMatriz, false)
 //JSON de viaturas

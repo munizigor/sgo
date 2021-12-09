@@ -23,19 +23,29 @@
     },
 
     {
-      "matches": ["*://fenix.ssp.df.gov.br/recursos/listatelaajax*","*://sgo.ssp.df.gov.br/recursos/listatelaajax*"],
-      "js":["js/jquery-2.1.1.min.js","js/mostrar_recursos.js","js/mostrar_matriz.js"]
+      "matches": ["*://*.ssp.df.gov.br/recursos/listatelaajax*"],
+      "js":["js/jquery-2.1.1.min.js","js/mostrar_recursos.js"]
 
-    },    
+    },
+    {
+      "matches": ["*://*.ssp.df.gov.br/relatorios/poderoperacional*"],
+      "js":["js/jquery-2.1.1.min.js","js/mostrar_matriz.js"]
+
+    },  
     
     {
-      "matches": ["*://*.br/recursos/editar?cod_recurso=*"],
+      "matches": ["*://*.ssp.df.gov.br/recursos/editar?cod_recurso=*"],
       "js":["js/jquery-2.1.1.min.js","js/editar_recurso.js"]
 
     },
     
     {
-      "matches": ["*://*.br/atendimento/emandamento*","*://*.br/atendimento/acompanhamento*","*://*.br/teleatendimentocbmdf/emandamento*","*://*.br/teleatendimento/emandamento*"],
+      "matches": [
+        "*://*.ssp.df.gov.br/atendimento/emandamento*",
+        "*://*.ssp.df.gov.br/atendimento/acompanhamento*",
+        "*://*.ssp.df.gov.br/teleatendimentocbmdf/emandamento*",
+        "*://*.ssp.df.gov.br/teleatendimento/emandamento*"
+      ],
       "js":["js/jquery-2.1.1.min.js","js/alerta_externo.js"]
 
     }

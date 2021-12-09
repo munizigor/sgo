@@ -1,3 +1,21 @@
+// function lerAtendimentos () {
+//     //iterando pelas linhas da tabela
+//     tabela = document.getElementById("dt_basic").getElementsByTagName("tbody")[0];
+//     tab_len = tabela.rows.length-1
+// 	for (var i = tab_len; row = tabela.rows[i]; i--) {
+// 		let recurso = row.getElementsByTagName("td");
+//         let link = recurso[0].getElementsByTagName("a")[0]
+//         // let link_txt = link.innerText.replace(/\D/g,'');
+//             let url_teleatendimento = link.href
+//             $.get(url_teleatendimento).then(function(data){
+//                 var el = document.createElement('html');
+//                 el.innerHTML = data
+//                 console.log(el)
+//             });
+
+//     }
+// }
+
 function alertar_compartilhamento () {
     //iterando pelas linhas da tabela
     tabela = document.getElementById("dt_basic").getElementsByTagName("tbody")[0];
@@ -22,12 +40,16 @@ function alertar_compartilhamento () {
                     }
                 }
                 divs_list_sem_cocb = divs_list.replace(/MESA.*CBMDF/g,"")
-                // console.log("\n\n"+cod_recurso+" - \n\n"+divs_list_sem_cocb+"\n\n\n\n")
                 return divs_list_sem_cocb
             }).then(function(){
                 if (!divs_list_sem_cocb.includes("CBMDF")) {
-                        recurso[5].innerHTML="<h3>QTO EXTERNA SEM DESPACHO<br><br><strong>DESPACHAR IMEDIATAMENTE</strong></h3>"
-                        recurso[0].parentNode.style.backgroundColor="indianred"; //TODO: Remover fundo vermelho. Deixar apenas nas ocorrências em atraso
+                        // recurso[5].innerHTML="<h3>QTO EXTERNA SEM DESPACHO<br><br><strong>DESPACHAR IMEDIATAMENTE</strong></h3>"
+                        // recurso[0].parentNode.style.backgroundColor="indianred"; //TODO: Remover fundo vermelho. Deixar apenas nas ocorrências em atraso
+                        recurso[0].insertAdjacentHTML("beforeend", `
+                        <p class="small" name="aviso_externa" style="color:red">
+                            QTO EXTERNA SEM DESPACHO<br><br><strong>DESPACHAR IMEDIATAMENTE</strong>
+                        </p>
+                    `);
                         tabela.insertAdjacentElement('afterbegin',recurso[0].parentNode)
                 }
             }
@@ -36,6 +58,8 @@ function alertar_compartilhamento () {
                 }
         }
       }
+
+// lerAtendimentos ();
 
 alertar_compartilhamento ();
 
