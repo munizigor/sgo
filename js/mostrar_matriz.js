@@ -27,8 +27,7 @@
 
 // inclBtnMatriz();
 
-
-function loadPoder () {
+function loadInit () {
 
     $("#content").remove();
     // $("ear-comunicado-geral").remove();
@@ -39,7 +38,30 @@ function loadPoder () {
     // $("btn-ear-lista-recursos").remove();
     // $("#main").append('<div class="row" id="botaoCores"></div>')
     $("#main").append('<div class="row" id="resultadoRow"></div>')
-    $("#resultadoRow").append('<div style="align-content:center" id="resultado" class="col-md-12"></div>')
+    $("#resultadoRow").append('<div class="row" id="botaoCores"></div>')
+    $("#botaoCores").append(`
+        <ul>
+            <li class="open">
+                <span  id="btn_matriz" class="btn btn-warning" title="Poder">Poder Operacional</span>
+            </li>
+            <li class="open">
+                <span  id="btn_regul_med" class="btn btn-danger" title="Regulacao">Regulação Médica</span>
+            </li>
+        </ul>
+    `)
+    $("#resultadoRow").append(`<div id="resultado" class="col-md-12" 
+                            style="padding-right: 40px;padding-top: 20px;padding-left: 30px;"></div>`)
+    $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
+    $("#botaoCores").append( `
+        <div class="col-md-12 form-check form-switch">
+            <label>Atualização Automática</label>
+            <input id="FLG_ATUALIZA" name="ATUALIZAÇÃO AUTOMÁTICA" type="checkbox" checked>
+        </div>
+    `);
+
+}
+
+function loadPoder () {
     //Definicao de Variaveis
     
     var cod_agencia = "2";
@@ -59,6 +81,7 @@ function loadPoder () {
         url: location.origin+"/Recursos/ajaxGetServicoPorAgencia/2",
         dataType: "json",
     success: function (data) {
+        $("#resultado table").remove();
         $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
         $("#resultado table").append('<thead><tr id="cabecalho"><th>MESA</th><th>UNIDADE</th><th>SIGLA</th><th>REGIÃO DE ATENDIMENTO</th></tr></thead>');
 
@@ -224,7 +247,164 @@ $.ajax({
  });
 }
 
-loadPoder()
+
+function loadRegulMed() {
+
+    //Definicao de Variaveis
+    
+    var cod_agencia = "2";
+    var cod_unidade = "";
+    var cod_unidade_mesa_atuacao = "";
+    var cod_tipo_recurso = "";
+    var nm_recurso = "";
+    var qtd_registro_pagina = "80000";
+    var cod_disponibilidade_recurso = "0";
+    var pagina = "0";
+
+      $.ajax({
+        type: "POST",
+        url: location.origin+"/Recursos/ajaxGetBuscaRecursos/",
+        dataType: "json",
+        data: {
+            cod_agencia: cod_agencia,
+            qtd_registro_pagina: qtd_registro_pagina,
+            cod_disponibilidade: cod_disponibilidade_recurso,
+            pagina: pagina
+        },
+        success: function (data) {
+
+            $("#resultado table").remove();
+            $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
+            $("#resultado table").append('<thead><tr><th>Recurso - Tipo Recurso</th><th>Disponibilidade</th><th>Tempo no Status Atual</th><th>Agência - Unidade</th><th>Mesa / Área Atuação</th><th>Comandante</th></tr></thead>');
+            $("#resultado table").append('<tfoot><tr><th>Recurso - Tipo Recurso</th><th>Disponibilidade</th><th>Tempo no Status Atual</th><th>Agência - Unidade</th><th>Mesa / Área Atuação</th><th>Comandante</th></th></tr></tfoot>');
+            $("#resultado table").append('<tbody></tbody>');
+
+            ///onMouseOver="javascript:this.style.backgroundColor='#C0B085'" onMouseOut="javascript:this.style.backgroundColor=''"
+
+            total_registro = data.quantidade_registro_retornado.QTD_REGISTRO_RETORNADO;
+
+            linha = 1;
+            var urExcluir = "";
+            var disponibilidade_class = "";
+            var acao = "";
+            var cod_disponibilidade = 0;
+            var textoBotao = "";
+            var id_Tr = "";
+            var id_Td = "";
+
+            //Filtrar apenas
+
+
+            //for (i = pagina * tamanhoPagina; i < total_registro && i < (pagina + 1) * tamanhoPagina; i++) {
+            $.each(data.recursos, function (key, value) {
+                observacao = ((value.DSC_OBSERVACAO)? value.DSC_OBSERVACAO : "")
+                if (observacao.split("|").indexOf("REGULAÇÃO MÉDICA") == -1){
+                    return true;
+                }
+                cod_recurso = value.COD_RECURSO;
+                acao = "";
+                
+                if (value.COD_DISPONIBILIDADE_RECURSO == 1) {
+
+                    disponibilidade_class = "status-ativo";
+
+                }
+                else if (value.COD_DISPONIBILIDADE_RECURSO == 2) {
+                    disponibilidade_class = "status-alocado";
+
+                }
+                else if (value.COD_DISPONIBILIDADE_RECURSO == 3) {
+                    disponibilidade_class = "status-desativado";
+
+                }
+                else if (value.COD_DISPONIBILIDADE_RECURSO == 7) {
+                    disponibilidade_class = "status-em-delegacia-hospital";
+                }
+                else {
+                    disponibilidade_class = "status-em-outra-situacao";
+
+                }
+
+                id_Tr = ("idTr-"+cod_recurso);
+                id_Td = ('idTd-'+cod_recurso);
+
+
+                
+                if (value.DT_ULTIMO_UPDATE_STATUS == null) {
+                    DT_ULTIMO_UPDATE_STATUS = "";
+                } else {
+                    DT_ULTIMO_UPDATE_STATUS = value.DT_ULTIMO_UPDATE_STATUS;
+                }
+                $("#resultado table tbody").append('<tr id=\'' + id_Tr + '\'class = \'' + disponibilidade_class + '\'><td><ul><li><b>'
+                    + value.NM_RECURSO + ' - ' + value.DSC_TIPO_RECURSO + '</b><br></li></td><td id=\'' + id_Td + '\'>'
+                    + value.LABEL_DISPONIBILIDADE + '<br><b>' + value.DT_ULTIMO_UPDATE_STATUS + '</td><td class="tempo_status" name="'+value.DT_ULTIMO_UPDATE_STATUS
+                    +'"></td><td>' + value.NM_SIGLA_AGENCIA + ' - ' + value.NM_SIGLA_UNIDADE
+                    + '</td><td><b>' + value.DSC_MESA_ATUACAO + ' - ' + value.LABEL_AREA_ATUACAO + '</b></td><td><b>' + value.NR_MATR_CMT_RECURSO_ATUAL_INTERNO
+                    + ' - ' + value.NM_CMT_RECURSO_ATUAL_INTERNO + '<br>' + value.NR_TEL_CMT_RECURSO_ATUAL_INTERNO + '<b></td></tr>');
+            }
+            )//.then(setInterval(vtrSamu, 1000));
+
+            // $("#resultado").append('</table>');
+            $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(total_registro / qtd_registro_pagina));
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
+        }
+    });
+
+
+        function setTimerFunction(){
+            // FUncao ativar timer
+            loadRegulMed();
+            inicioTimer = setInterval(loadRegulMed, 60000);
+            inicioTimer;
+            $('#FLG_ATUALIZA').change(function(){  
+                this.checked ? inicioTimer : clearInterval(inicioTimer);
+                alert(this.checked? "Atualização automática Ativada":"Atualização automática Desativada")
+            });
+            document.getElementById("ear-alerta-ocorrencias").remove();
+            document.getElementById("btn-ear-alerta-ocorrencias").remove();
+            document.getElementById("ear-lista-recursos").remove();
+            document.getElementById("btn-ear-lista-recursos").remove();
+            document.getElementById("btn-ear-comunicado-geral").remove();
+            document.getElementById("ear-comunicado-geral").remove();
+        }
+        
+        function set_tempo_status (){
+            function FormataStringData(data) {
+                var dia  = data.split("/")[0];
+                var mes  = data.split("/")[1];
+                var anohora  = data.split("/")[2];
+            
+                return mes + '/' + dia + '/' + anohora;
+                // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
+            }
+        
+            $('.tempo_status').each(function (index,element) {
+                data_status = FormataStringData(element.getAttribute("name"));
+                data_agora = new Date();
+                diff_status = data_agora - new Date(data_status);
+                options = { hour: 'numeric', minute: 'numeric', second: 'numeric'};
+        
+                diff_status_fmt = diff_status.toLocaleString("en-US",options)
+                element.innerHTML = new Date(diff_status).toISOString().substr(11, 8);
+            })
+        }
+        
+        setTimerFunction();
+        setInterval(set_tempo_status,1000);
+
+
+}
+
+
+loadInit ();
+// loadPoder();
+
+document.getElementById("btn_regul_med").addEventListener ("click", loadRegulMed, false);
+document.getElementById("btn_matriz").addEventListener ("click", loadPoder, false);
 // inclBtnMatriz();
 // document.getElementById("btn_matriz").addEventListener ("click", loadMatriz, false)
 //JSON de viaturas

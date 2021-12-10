@@ -1,5 +1,5 @@
 //TODO:
-// 3. Cronometrar tempo tultima atualização
+// 3. Cronometrar tempo ultima atualização
 // 4. REtirar abas de alerta
 
 // Adicionar botao Regul Méd

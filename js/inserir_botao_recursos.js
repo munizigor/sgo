@@ -9,7 +9,7 @@ function inserir_botao_recurso () {
     //criando icone para Mostrar Recursos
         left_panel.insertAdjacentHTML("beforeend", `
             <li class="open">
-                <a href="/recursos/listatelaajax" title="Mostrar URs Reguladas">
+                <a href="/relatorios/poderoperacional" title="Poder Operacional">
                     <i class="fa fa-lg fa-fw fa-fw fa-ambulance">
                     </i> 
             </li>
