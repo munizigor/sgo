@@ -30,35 +30,74 @@
 function loadInit () {
 
     $("#content").remove();
-    // $("ear-comunicado-geral").remove();
-    // $("btn-ear-comunicado-geral").remove(); TODO: Retirar abas COmunicados
-    // $("ear-alerta-ocorrencias").remove();
-    // $("btn-ear-alerta-ocorrencias").remove();
-    // $("ear-lista-recursos").remove();
-    // $("btn-ear-lista-recursos").remove();
     // $("#main").append('<div class="row" id="botaoCores"></div>')
     $("#main").append('<div class="row" id="resultadoRow"></div>')
+
     $("#resultadoRow").append('<div class="row" id="botaoCores"></div>')
+
     $("#botaoCores").append(`
-        <ul>
-            <li class="open">
-                <span  id="btn_matriz" class="btn btn-warning" title="Poder">Poder Operacional</span>
-            </li>
-            <li class="open">
-                <span  id="btn_regul_med" class="btn btn-danger" title="Regulacao">Regulação Médica</span>
-            </li>
+        <ul style="list-style-type: none;">
         </ul>
+
     `)
+    
+    $("#botaoCores ul").append(`
+    <li class="open">
+        <span  id="btn_matriz" class="btn btn-warning" title="Poder">Poder Operacional</span>
+    </li>
+    `)
+
+    $("#botaoCores ul").append(`
+    <li class="open">
+        <span  id="btn_regul_med" class="btn btn-danger" title="Regulacao">Regulação Médica</span>
+    </li>
+    `)
+
+    $("#botaoCores ul").append(`
+    <li class="open">
+        <label>Atualização Automática</label>
+        <input id="FLG_ATUALIZA" name="ATUALIZAÇÃO AUTOMÁTICA" type="checkbox" checked>
+    </li>
+    `)
+
     $("#resultadoRow").append(`<div id="resultado" class="col-md-12" 
                             style="padding-right: 40px;padding-top: 20px;padding-left: 30px;"></div>`)
-    $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
-    $("#botaoCores").append( `
-        <div class="col-md-12 form-check form-switch">
-            <label>Atualização Automática</label>
-            <input id="FLG_ATUALIZA" name="ATUALIZAÇÃO AUTOMÁTICA" type="checkbox" checked>
-        </div>
-    `);
 
+    $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
+
+}
+
+function removeEars(){
+    let first_ear = document.getElementById("ear-alerta-ocorrencias")
+    if(typeof(first_ear) != 'undefined' && first_ear != null){
+        document.getElementById("ear-alerta-ocorrencias").remove();
+        document.getElementById("btn-ear-alerta-ocorrencias").remove();
+        document.getElementById("ear-lista-recursos").remove();
+        document.getElementById("btn-ear-lista-recursos").remove();
+        document.getElementById("btn-ear-comunicado-geral").remove();
+        document.getElementById("ear-comunicado-geral").remove();
+    }
+}
+
+function set_tempo_status (){
+    function FormataStringData(data) {
+        var dia  = data.split("/")[0];
+        var mes  = data.split("/")[1];
+        var anohora  = data.split("/")[2];
+    
+        return mes + '/' + dia + '/' + anohora;
+        // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
+    }
+
+    $('.tempo_status').each(function (index,element) {
+        data_status = FormataStringData(element.getAttribute("name"));
+        data_agora = new Date();
+        diff_status = data_agora - new Date(data_status);
+        options = { hour: 'numeric', minute: 'numeric', second: 'numeric'};
+
+        diff_status_fmt = diff_status.toLocaleString("en-US",options)
+        element.innerHTML = new Date(diff_status).toISOString().substr(11, 8);
+    })
 }
 
 function loadPoder () {
@@ -100,7 +139,6 @@ function loadPoder () {
         console.log(errorThrown);
     }
     }).then(function () {
-
     //Gerar linhas por unidade
     $.ajax({
         type: "POST",
@@ -113,7 +151,6 @@ function loadPoder () {
         },
     success: function (data) {
         //Modelo de dados de Agencia
-
         // CHECK_SE_MESA_UNIDADE: false
         // COD_AGENCIA: 2
         // COD_BAIRRO: 2
@@ -174,76 +211,76 @@ function loadPoder () {
     }).then(function () {
 
 //AJAX para inserir as viaturas
-$.ajax({
-    type: "POST",
-    url: location.origin+"/Recursos/ajaxGetBuscaRecursos/",
-    dataType: "json",
-    data: {
-        cod_agencia: cod_agencia,
-        qtd_registro_pagina: qtd_registro_pagina,
-        cod_disponibilidade: cod_disponibilidade_recurso,
-        pagina: pagina
-    },
-    success: function (data) {
-        total_registro = data.quantidade_registro_retornado.QTD_REGISTRO_RETORNADO;
-        $.each(data.recursos, function (key, value) {
+        $.ajax({
+            type: "POST",
+            url: location.origin+"/Recursos/ajaxGetBuscaRecursos/",
+            dataType: "json",
+            data: {
+                cod_agencia: cod_agencia,
+                qtd_registro_pagina: qtd_registro_pagina,
+                cod_disponibilidade: cod_disponibilidade_recurso,
+                pagina: pagina
+            },
+            success: function (data) {
+                total_registro = data.quantidade_registro_retornado.QTD_REGISTRO_RETORNADO;
+                $.each(data.recursos, function (key, value) {
+                    
+
+                    vtr_cod_unidade = value.COD_UNIDADE
+                    vtr_servico = dict_servico[value.NM_SERVICO]
+
+                    linha = document.getElementById("idUn-"+vtr_cod_unidade)
+                    coluna = document.getElementById("cabecalho").cells.namedItem(vtr_servico)
+                    linha = ((linha)? linha:document.getElementById("idUn-531"))//Provisorio
+                    coluna = ((coluna)? coluna:document.getElementById("cabecalho").cells.namedItem('NI'))//Provisorio
+                    if (!linha || !coluna){
+                        return true;
+                    }
+
+                    if (value.COD_DISPONIBILIDADE_RECURSO == 1) {
+
+                        disponibilidade_class = "status-ativo";
+                        //corLinha = "#16a085";
+                        /////se estiver ativa, desativá-la....
+                        //cod_disponibilidade = 3;
+                        // textoBotao = "Desativar";
+                    }
+                    else if (value.COD_DISPONIBILIDADE_RECURSO == 2) {
+                        disponibilidade_class = "status-alocado";
+                        //corLinha = "#e67e22";
+                    }
+                    else if (value.COD_DISPONIBILIDADE_RECURSO == 3) {
+                        disponibilidade_class = "status-desativado";
+                        ////////////estando desativada; ativá-la
+                        //cod_disponibilidade = 1;
+                        //textoBotao = "Ativar";
+                        // corLinha = "#FF7F50";
+                    }
+                    else if (value.COD_DISPONIBILIDADE_RECURSO == 7) {
+                        disponibilidade_class = "status-em-delegacia-hospital";
+                        ////////////estando desativada; ativá-la
+                        //cod_disponibilidade = "";
+                        //textoBotao = "Ativar";
+                        //corLinha = "#338DCD";
+                    }
+                    else {
+                        disponibilidade_class = "status-em-outra-situacao";
+                        //cod_disponibilidade = "";
+                        //corLinha = "#666";
+                    }
+
+                    idx = coluna.cellIndex
+                    linha.cells[idx].insertAdjacentHTML("beforeend", 
+                            '<a href="/recursos/editar?cod_recurso='+value.COD_RECURSO+'&amp;cod_agencia=2" target="_blank">'
+                            +'<span class="btnVtrs btn '+disponibilidade_class+' txt-color-white" title="'+value.LABEL_DISPONIBILIDADE+'"'
+                            +'onclick="">'+value.NM_RECURSO+'</span></a>')
             
+                }); 
 
-            vtr_cod_unidade = value.COD_UNIDADE
-            vtr_servico = dict_servico[value.NM_SERVICO]
-
-            linha = document.getElementById("idUn-"+vtr_cod_unidade)
-            coluna = document.getElementById("cabecalho").cells.namedItem(vtr_servico)
-            linha = ((linha)? linha:document.getElementById("idUn-531"))//Provisorio
-            coluna = ((coluna)? coluna:document.getElementById("cabecalho").cells.namedItem('NI'))//Provisorio
-            if (!linha || !coluna){
-                return true;
             }
 
-            if (value.COD_DISPONIBILIDADE_RECURSO == 1) {
 
-                disponibilidade_class = "status-ativo";
-                //corLinha = "#16a085";
-                /////se estiver ativa, desativá-la....
-                //cod_disponibilidade = 3;
-                // textoBotao = "Desativar";
-            }
-            else if (value.COD_DISPONIBILIDADE_RECURSO == 2) {
-                disponibilidade_class = "status-alocado";
-                //corLinha = "#e67e22";
-            }
-            else if (value.COD_DISPONIBILIDADE_RECURSO == 3) {
-                disponibilidade_class = "status-desativado";
-                ////////////estando desativada; ativá-la
-                //cod_disponibilidade = 1;
-                //textoBotao = "Ativar";
-                // corLinha = "#FF7F50";
-            }
-            else if (value.COD_DISPONIBILIDADE_RECURSO == 7) {
-                disponibilidade_class = "status-em-delegacia-hospital";
-                ////////////estando desativada; ativá-la
-                //cod_disponibilidade = "";
-                //textoBotao = "Ativar";
-                //corLinha = "#338DCD";
-            }
-            else {
-                disponibilidade_class = "status-em-outra-situacao";
-                //cod_disponibilidade = "";
-                //corLinha = "#666";
-            }
-
-            idx = coluna.cellIndex
-            linha.cells[idx].insertAdjacentHTML("beforeend", 
-                    '<a href="/recursos/editar?cod_recurso='+value.COD_RECURSO+'&amp;cod_agencia=2" target="_blank">'
-                    +'<span class="btnVtrs btn '+disponibilidade_class+' txt-color-white" title="'+value.LABEL_DISPONIBILIDADE+'"'
-                    +'onclick="">'+value.NM_RECURSO+'</span></a>')
-    
-        }); 
-
-    }
-
-
- });
+        });
  });
 }
 
@@ -276,7 +313,6 @@ function loadRegulMed() {
             $("#resultado table").remove();
             $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
             $("#resultado table").append('<thead><tr><th>Recurso - Tipo Recurso</th><th>Disponibilidade</th><th>Tempo no Status Atual</th><th>Agência - Unidade</th><th>Mesa / Área Atuação</th><th>Comandante</th></tr></thead>');
-            $("#resultado table").append('<tfoot><tr><th>Recurso - Tipo Recurso</th><th>Disponibilidade</th><th>Tempo no Status Atual</th><th>Agência - Unidade</th><th>Mesa / Área Atuação</th><th>Comandante</th></th></tr></tfoot>');
             $("#resultado table").append('<tbody></tbody>');
 
             ///onMouseOver="javascript:this.style.backgroundColor='#C0B085'" onMouseOut="javascript:this.style.backgroundColor=''"
@@ -335,8 +371,8 @@ function loadRegulMed() {
                 } else {
                     DT_ULTIMO_UPDATE_STATUS = value.DT_ULTIMO_UPDATE_STATUS;
                 }
-                $("#resultado table tbody").append('<tr id=\'' + id_Tr + '\'class = \'' + disponibilidade_class + '\'><td><ul><li><b>'
-                    + value.NM_RECURSO + ' - ' + value.DSC_TIPO_RECURSO + '</b><br></li></td><td id=\'' + id_Td + '\'>'
+                $("#resultado table tbody").append('<tr id=\'' + id_Tr + '\'class = \'' + disponibilidade_class + '\'><td><b>'
+                    + value.NM_RECURSO + ' - ' + value.DSC_TIPO_RECURSO + '</b><br></td><td id=\'' + id_Td + '\'>'
                     + value.LABEL_DISPONIBILIDADE + '<br><b>' + value.DT_ULTIMO_UPDATE_STATUS + '</td><td class="tempo_status" name="'+value.DT_ULTIMO_UPDATE_STATUS
                     +'"></td><td>' + value.NM_SIGLA_AGENCIA + ' - ' + value.NM_SIGLA_UNIDADE
                     + '</td><td><b>' + value.DSC_MESA_ATUACAO + ' - ' + value.LABEL_AREA_ATUACAO + '</b></td><td><b>' + value.NR_MATR_CMT_RECURSO_ATUAL_INTERNO
@@ -352,59 +388,43 @@ function loadRegulMed() {
             console.log(textStatus);
             console.log(errorThrown);
         }
+    }).then(setInterval(set_tempo_status,1000));
+
+
+}
+
+function setTimerFunction(){
+    // FUncao ativar timer
+    loadRegulMed();
+    inicioTimer = setInterval(loadRegulMed, 60000);
+    inicioTimer;
+    $('#FLG_ATUALIZA').change(function(){  
+        this.checked ? inicioTimer : clearInterval(inicioTimer);
+        alert(this.checked? "Atualização automática Ativada":"Atualização automática Desativada")
     });
-
-
-        function setTimerFunction(){
-            // FUncao ativar timer
-            loadRegulMed();
-            inicioTimer = setInterval(loadRegulMed, 60000);
-            inicioTimer;
-            $('#FLG_ATUALIZA').change(function(){  
-                this.checked ? inicioTimer : clearInterval(inicioTimer);
-                alert(this.checked? "Atualização automática Ativada":"Atualização automática Desativada")
-            });
-            document.getElementById("ear-alerta-ocorrencias").remove();
-            document.getElementById("btn-ear-alerta-ocorrencias").remove();
-            document.getElementById("ear-lista-recursos").remove();
-            document.getElementById("btn-ear-lista-recursos").remove();
-            document.getElementById("btn-ear-comunicado-geral").remove();
-            document.getElementById("ear-comunicado-geral").remove();
-        }
-        
-        function set_tempo_status (){
-            function FormataStringData(data) {
-                var dia  = data.split("/")[0];
-                var mes  = data.split("/")[1];
-                var anohora  = data.split("/")[2];
-            
-                return mes + '/' + dia + '/' + anohora;
-                // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
-            }
-        
-            $('.tempo_status').each(function (index,element) {
-                data_status = FormataStringData(element.getAttribute("name"));
-                data_agora = new Date();
-                diff_status = data_agora - new Date(data_status);
-                options = { hour: 'numeric', minute: 'numeric', second: 'numeric'};
-        
-                diff_status_fmt = diff_status.toLocaleString("en-US",options)
-                element.innerHTML = new Date(diff_status).toISOString().substr(11, 8);
-            })
-        }
-        
-        setTimerFunction();
-        setInterval(set_tempo_status,1000);
-
-
+    document.getElementById("ear-alerta-ocorrencias").remove();
+    document.getElementById("btn-ear-alerta-ocorrencias").remove();
+    document.getElementById("ear-lista-recursos").remove();
+    document.getElementById("btn-ear-lista-recursos").remove();
+    document.getElementById("btn-ear-comunicado-geral").remove();
+    document.getElementById("ear-comunicado-geral").remove();
 }
 
 
 loadInit ();
 // loadPoder();
 
-document.getElementById("btn_regul_med").addEventListener ("click", loadRegulMed, false);
-document.getElementById("btn_matriz").addEventListener ("click", loadPoder, false);
+document.getElementById("btn_regul_med").addEventListener ("click", function() {
+    removeEars();
+    clearInterval(loadPoder); //TODO: Funcao não está sendo executada
+    loadRegulMed();
+    setInterval(loadRegulMed, 10000);
+}, false);
+document.getElementById("btn_matriz").addEventListener ("click", function() {
+    clearInterval(loadRegulMed);
+    loadPoder();
+    setInterval(loadPoder, 10000);
+}, false);
 // inclBtnMatriz();
 // document.getElementById("btn_matriz").addEventListener ("click", loadMatriz, false)
 //JSON de viaturas

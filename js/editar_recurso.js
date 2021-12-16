@@ -11,8 +11,6 @@ function alterarDOM(){
     </div>
 `)
 
-console.log(obs.value)
-
 }
 
 function lerParams(){
