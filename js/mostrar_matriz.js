@@ -5,64 +5,36 @@
 // Para encontrar descrição das unidades: https://sgo.ssp.df.gov.br/Recursos/ajaxGetUnidadePorAgencia/2
 // Adicionar botao Regul Méd
 // COnsultar ocorrências: https://sgo.ssp.df.gov.br/Ocorrencia
-// function inclBtnMatriz(){
-//     $("#content").remove();
-//     // $("ear-comunicado-geral").remove();
-//     // $("btn-ear-comunicado-geral").remove(); TODO: Retirar abas COmunicados
-//     // $("ear-alerta-ocorrencias").remove();
-//     // $("btn-ear-alerta-ocorrencias").remove();
-//     // $("ear-lista-recursos").remove();
-//     // $("btn-ear-lista-recursos").remove();
-//     // $("#main").append('<div class="row" id="botaoCores"></div>')
-//     $("#main").append('<div class="row" id="resultadoRow"></div>')
-//     $("#resultadoRow").append('<div style="align-content:center" id="resultado" class="col-md-12"></div>')
-// //     $("#botaoCores").append(`
-// //     <ul>
-// //     <li class="open">
-// //         <span  id="btn_matriz" class="btn btn-warning" title="Matriz">Poder Operacional</span>
-// //     </li>
-// //     </ul>
-// // `)
-// }
 
-// inclBtnMatriz();
+
 
 function loadInit () {
 
     $("#content").remove();
-    // $("#main").append('<div class="row" id="botaoCores"></div>')
     $("#main").append('<div class="row" id="resultadoRow"></div>')
-
     $("#resultadoRow").append('<div class="row" id="botaoCores"></div>')
-
     $("#botaoCores").append(`
         <ul style="list-style-type: none;">
         </ul>
-
-    `)
-    
+    `)  
     $("#botaoCores ul").append(`
     <li class="open">
         <span  id="btn_matriz" class="btn btn-warning" title="Poder">Poder Operacional</span>
     </li>
     `)
-
     $("#botaoCores ul").append(`
     <li class="open">
         <span  id="btn_regul_med" class="btn btn-danger" title="Regulacao">Regulação Médica</span>
     </li>
     `)
-
     $("#botaoCores ul").append(`
     <li class="open">
         <label>Atualização Automática</label>
         <input id="FLG_ATUALIZA" name="ATUALIZAÇÃO AUTOMÁTICA" type="checkbox" checked>
     </li>
     `)
-
     $("#resultadoRow").append(`<div id="resultado" class="col-md-12" 
                             style="padding-right: 40px;padding-top: 20px;padding-left: 30px;"></div>`)
-
     $("#resultado").append("<table border = 1 align=center class='table table-condensed table-hover'></table>");
 
 }
@@ -337,6 +309,7 @@ function loadRegulMed() {
                 if (observacao.split("|").indexOf("REGULAÇÃO MÉDICA") == -1){
                     return true;
                 }
+                console.log(data)
                 cod_recurso = value.COD_RECURSO;
                 acao = "";
                 
@@ -374,7 +347,7 @@ function loadRegulMed() {
                 $("#resultado table tbody").append('<tr id=\'' + id_Tr + '\'class = \'' + disponibilidade_class + '\'><td><b>'
                     + value.NM_RECURSO + ' - ' + value.DSC_TIPO_RECURSO + '</b><br></td><td id=\'' + id_Td + '\'>'
                     + value.LABEL_DISPONIBILIDADE + '<br><b>' + value.DT_ULTIMO_UPDATE_STATUS + '</td><td class="tempo_status" name="'+value.DT_ULTIMO_UPDATE_STATUS
-                    +'"></td><td>' + value.NM_SIGLA_AGENCIA + ' - ' + value.NM_SIGLA_UNIDADE
+                    +'"></td><td>' + value.NM_SIGLA_UNIDADE
                     + '</td><td><b>' + value.DSC_MESA_ATUACAO + ' - ' + value.LABEL_AREA_ATUACAO + '</b></td><td><b>' + value.NR_MATR_CMT_RECURSO_ATUAL_INTERNO
                     + ' - ' + value.NM_CMT_RECURSO_ATUAL_INTERNO + '<br>' + value.NR_TEL_CMT_RECURSO_ATUAL_INTERNO + '<b></td></tr>');
             }
@@ -402,17 +375,10 @@ function setTimerFunction(){
         this.checked ? inicioTimer : clearInterval(inicioTimer);
         alert(this.checked? "Atualização automática Ativada":"Atualização automática Desativada")
     });
-    document.getElementById("ear-alerta-ocorrencias").remove();
-    document.getElementById("btn-ear-alerta-ocorrencias").remove();
-    document.getElementById("ear-lista-recursos").remove();
-    document.getElementById("btn-ear-lista-recursos").remove();
-    document.getElementById("btn-ear-comunicado-geral").remove();
-    document.getElementById("ear-comunicado-geral").remove();
 }
 
 
 loadInit ();
-// loadPoder();
 
 document.getElementById("btn_regul_med").addEventListener ("click", function() {
     removeEars();
